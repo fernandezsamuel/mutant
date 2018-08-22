@@ -61,5 +61,19 @@ public class MutantServiceTests {
 		 }
 		 
 	 }
+	 
+	 @Test
+	 public void dnaMatcher() {
+		 
+		 final String pattern = "[ATCG]+";
+		 String dna = "ATGCGA";
+		 Assert.assertTrue(dna.matches(pattern));
+
+		 dna = "";
+		 Assert.assertFalse(dna.matches(pattern));
+		 
+		 dna = "ATGWCGA";
+		 Assert.assertFalse(dna.matches(pattern));
+	 }
 	
 }

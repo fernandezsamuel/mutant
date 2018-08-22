@@ -65,6 +65,26 @@ public class MutantController {
     @RequestMapping(value = "/mutant", method = RequestMethod.POST, consumes="application/json")
     public Object mutant(@ApiParam(value = "Array of strings representing dna. Should generate a NxN char matrix", required = true)  @RequestBody DnaRequest dnaContainer) {
     	
+		// Special validations, could be ommited if trusted source
+		if (dnaContainer.getDna() == null) {
+			return new ResponseEntity<>("Falta especificar la cadena de ADN.", HttpStatus.BAD_REQUEST);
+		}
+		
+		// all string should have same lenght
+		int size = dnaContainer.getDna().length; 
+		for(String dna: dnaContainer.getDna()) {
+			if (dna.length() != size) {
+				return new ResponseEntity<>("La cadena de ADN debe ser de nxn.", HttpStatus.BAD_REQUEST);
+			}
+			if (!dna.matches("[ATCG]+")) {
+				return new ResponseEntity<>("La cadena de ADN solo puede estar conformada por A,T,C o G.", HttpStatus.BAD_REQUEST);
+			}
+		}
+		
+		if (dnaContainer.getDna() == null) {
+			return new ResponseEntity<>("Falta especificar la cadena de ADN.", HttpStatus.BAD_REQUEST);
+		}
+		
     	Boolean isMutant = mutantService.isMutant(dnaContainer.getDna());
     	
     	logger.debug("/mutant: Arrives " + dnaContainer.getDna().toString() + ", result: isMutant=" + isMutant);
